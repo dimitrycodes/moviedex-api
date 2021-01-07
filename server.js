@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
+const MOVIES = require('./movies-data-small.json')
 
 const { API_TOKEN, PORT } = process.env;
 
@@ -20,9 +21,23 @@ app.use(morgan('dev'));
 
 app.use(validateBearerToken);
 
-app.use((req, res) => {
+app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
+
+function handleGetMovie(req, res) {
+  let response = MOVIES;
+
+  if (req.query.genre) {
+    response = response.filter((movie) =>
+      movie.genre.toLowerCase().includes(req.query.genre.toLowerCase())
+    );
+  }
+
+  res.json(response);
+}
+
+app.get('/movie', handleGetMovie);
 
 const port = PORT || 5000;
 
