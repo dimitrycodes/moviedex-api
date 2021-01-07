@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan');
+const helmet = require('helmet');
 const MOVIES = require('./movies-data-small.json');
 
 const { API_TOKEN, PORT } = process.env;
@@ -18,6 +20,8 @@ function validateBearerToken(req, res, next) {
 const app = express();
 
 app.use(morgan('dev'));
+app.use(cors());
+app.use(helmet());
 
 app.use(validateBearerToken);
 
